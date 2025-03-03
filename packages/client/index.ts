@@ -8,8 +8,12 @@ const trpc = createTRPCProxyClient<AppRouter>({
 });
 
 async function main() {
-  const result = await trpc.hello.query();
-  console.log("📡 Server Response:", result);
+  // 메시지 추가
+  await trpc.addMessage.mutate("안녕, SQLite!");
+
+  // 메시지 조회
+  const messages = await trpc.getMessages.query();
+  console.log("📡 저장된 메시지:", messages);
 }
 
 main();
