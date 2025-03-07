@@ -4,6 +4,7 @@
   "description": "trpc-app practice",
   "scripts": {
     "client": "pnpm -F @trpc-app/client",
+    "vite": "pnpm -F @trpc-app/client-vite",
     "server": "pnpm -F @trpc-app/server",
     "dev": "pnpm -r dev"
   },
