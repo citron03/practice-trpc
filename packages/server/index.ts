@@ -20,7 +20,8 @@ const appRouter = t.router({
 
   getMessages: t.procedure.query(() => {
     const stmt = db.prepare("SELECT * FROM messages");
-    return stmt.all();
+    return stmt.all() as 
+    {id: number, text: string}[];
   }),
 });
 

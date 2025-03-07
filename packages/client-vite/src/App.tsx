@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import type { AppRouter } from "../../server/index";
+import { useEffect, useState } from 'react';
+
+const trpc = createTRPCProxyClient<AppRouter>({
+  links: [
+    httpBatchLink({ url: "http://localhost:4000/trpc" }),
+  ],
+});
+
+async function main() {
+  // 메시지 추가
+  await trpc.addMessage.mutate("안녕, SQLite!");
+
+  // 메시지 조회
+  const messages = await trpc.getMessages.query();
+
+  return messages;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [messages, setMessages] = useState<Awaited<ReturnType<typeof main>>>();
+  useEffect(() => {
+    main().then(() => {
+      trpc.getMessages.query().then((messages) => {
+        setMessages(messages);
+      });
+    });
+  }, []);
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <p>서버 연결 테스트</p>
+      {messages?.map((message) => (
+        <div key={message.id}>{message.text}</div>
+      ))}
+    </div>
   )
 }
 
