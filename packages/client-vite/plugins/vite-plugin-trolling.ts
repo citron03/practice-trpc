@@ -3,6 +3,12 @@ import { Plugin } from "vite";
 export default function vitePluginTrolling(): Plugin {
   return {
     name: "vite-plugin-trolling",
+    resolveId(id) {
+      console.log("🤡 Resolving", id);
+    },
+    load(id) {
+      console.log("🤡 Loading", id);
+    },
 
     buildStart() {
       const messages = [
@@ -36,5 +42,11 @@ export default function vitePluginTrolling(): Plugin {
       }
       return html;
     },
-  };
+    buildEnd() {
+      console.log("🤡 Your build is done. Or is it?");
+    },
+    generateBundle() {
+      console.log("🤡 Your bundle is ready. Or is it?");
+    }
+  }
 }
