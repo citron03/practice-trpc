@@ -2,6 +2,7 @@ import './App.css'
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "../../server/index";
 import { useEffect, useState } from 'react';
+import virtualHello from 'virtual:hello';
 
 const trpc = createTRPCProxyClient<AppRouter>({
   links: [
@@ -32,6 +33,7 @@ function App() {
   return (
     <div>
       <p>서버 연결 테스트</p>
+      <p>{virtualHello}</p>
       {messages?.map((message) => (
         <div key={message.id}>{message.text}</div>
       ))}
